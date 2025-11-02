@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { Home, Gift, Heart, ShoppingBag, Users, User, QrCode } from 'lucide-react'
 
 // 页面组件
@@ -10,10 +10,16 @@ import StorePage from './pages/StorePage'
 import CommunityPage from './pages/CommunityPage'
 import ProfilePage from './pages/ProfilePage'
 import CredentialPage from './pages/CredentialPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
 
 // 通用组件
 import TabNavigation from './components/TabNavigation'
 import ModeToggle from './components/ModeToggle'
+import ProtectedRoute from './components/ProtectedRoute'
+
+// 工具
+import { getCurrentUser } from './utils/userService'
 
 function App() {
   const [mode, setMode] = useState('standard') // 'standard' | 'simplified'
@@ -26,21 +32,43 @@ function App() {
       setMode(savedMode)
     }
 
-    // 模拟用户数据
-    const mockUser = {
-      name: '何基基',
-      id: '310123456789',
-      level: '党组领导',
-      invitedCount: 7,
-      nextLevel: '党委书记',
-      needMore: 3,
-      benefits: {
-        travel: 1500,
-        gamePoints: 500,
-        eggs: 3
+    // 从 userService 获取当前登录用户
+    const loadUser = () => {
+      const currentUser = getCurrentUser()
+      if (currentUser) {
+        setUser(currentUser)
+      } else {
+        setUser(null)
       }
     }
-    setUser(mockUser)
+
+    loadUser()
+
+    // 监听 localStorage 变化（用于跨标签页同步）
+    const handleStorageChange = (e) => {
+      if (e.key === 'current_user' || e.key === null) {
+        loadUser()
+      }
+    }
+
+    // 监听用户登录/登出事件（用于同标签页同步）
+    const handleUserLogin = () => {
+      loadUser()
+    }
+
+    const handleUserLogout = () => {
+      setUser(null)
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('user-login', handleUserLogin)
+    window.addEventListener('user-logout', handleUserLogout)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('user-login', handleUserLogin)
+      window.removeEventListener('user-logout', handleUserLogout)
+    }
   }, [])
 
   const toggleMode = (newMode) => {
@@ -73,21 +101,83 @@ function App() {
         {/* 主要内容区域 */}
         <main className={`pb-18 ${mode === 'simplified' ? 'pb-20' : ''}`}>
           <Routes>
-            <Route path="/" element={<HomePage user={user} mode={mode} />} />
-            <Route path="/benefits" element={<BenefitsPage user={user} mode={mode} />} />
-            <Route path="/dating" element={<DatingPage user={user} mode={mode} />} />
-            <Route path="/store" element={<StorePage user={user} mode={mode} />} />
-            <Route path="/community" element={<CommunityPage user={user} mode={mode} />} />
-            <Route path="/profile" element={<ProfilePage user={user} mode={mode} onToggleMode={toggleMode} />} />
-            <Route path="/credential" element={<CredentialPage user={user} mode={mode} />} />
+            {/* 公开路由（不需要登录） */}
+            <Route path="/login" element={<LoginPage mode={mode} />} />
+            <Route path="/register" element={<RegisterPage mode={mode} />} />
+            
+            {/* 保护路由（需要登录） */}
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <HomePage user={user} mode={mode} />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/benefits" 
+              element={
+                <ProtectedRoute>
+                  <BenefitsPage user={user} mode={mode} />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dating" 
+              element={
+                <ProtectedRoute>
+                  <DatingPage user={user} mode={mode} />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/store" 
+              element={
+                <ProtectedRoute>
+                  <StorePage user={user} mode={mode} />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/community" 
+              element={
+                <ProtectedRoute>
+                  <CommunityPage user={user} mode={mode} />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <ProfilePage user={user} mode={mode} onToggleMode={toggleMode} />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/credential" 
+              element={
+                <ProtectedRoute>
+                  <CredentialPage user={user} mode={mode} />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* 默认重定向：未登录重定向到登录页，已登录重定向到首页 */}
+            <Route 
+              path="*" 
+              element={
+                user ? <Navigate to="/" replace /> : <Navigate to="/login" replace />
+              } 
+            />
           </Routes>
         </main>
 
-        {/* 底部导航 */}
-        <TabNavigation tabs={tabs} />
+        {/* 底部导航（仅在已登录时显示） */}
+        {user && <TabNavigation tabs={tabs} />}
 
         {/* 模式切换组件（仅在特定页面显示） */}
-        <ModeToggle mode={mode} onToggle={toggleMode} />
+        {user && <ModeToggle mode={mode} onToggle={toggleMode} />}
       </div>
     </div>
   )

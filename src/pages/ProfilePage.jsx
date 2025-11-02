@@ -1,22 +1,55 @@
 import React from 'react'
-import { ArrowLeft, User, Shield, Users, Monitor, HelpCircle, Info, LogOut, ChevronRight } from 'lucide-react'
+import { ArrowLeft, User, Shield, Users, Monitor, HelpCircle, Info, LogOut, ChevronRight, Download, Copy } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { logout, exportUsersData } from '../utils/userService'
 
 const ProfilePage = ({ user, mode, onToggleMode }) => {
   const navigate = useNavigate()
 
   if (!user) return null
 
+  const handleExportData = () => {
+    const data = exportUsersData()
+    const blob = new Blob([data], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `users-data-${new Date().toISOString().split('T')[0]}.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    alert('用戶數據已導出！')
+  }
+
+  const handleCopyIdCard = () => {
+    navigator.clipboard.writeText(user.id).then(() => {
+      alert('身份證號已複製到剪貼板！')
+    })
+  }
+
+  const handleLogout = () => {
+    if (confirm('確定要退出登錄嗎？')) {
+      logout()
+      // 触发自定义事件通知 App 更新用户状态
+      window.dispatchEvent(new Event('user-logout'))
+      navigate('/login')
+    }
+  }
+
   const menuItems = [
     {
       icon: User,
       label: '個人資料',
-      action: () => alert('個人資料功能開發中...')
+      action: () => {
+        alert(`姓名：${user.name}\n地址：${user.address}\n身份證號：${user.id}`)
+      }
     },
     {
       icon: Shield,
-      label: '帳戶安全',
-      action: () => alert('帳戶安全功能開發中...')
+      label: '身份證號',
+      action: handleCopyIdCard,
+      description: '點擊複製身份證號'
     },
     {
       icon: Users,
@@ -27,6 +60,11 @@ const ProfilePage = ({ user, mode, onToggleMode }) => {
       icon: Monitor,
       label: `顯示模式 ${mode === 'standard' ? '(標準)' : '(簡化)'}`,
       action: () => onToggleMode(mode === 'standard' ? 'simplified' : 'standard')
+    },
+    {
+      icon: Download,
+      label: '導出用戶數據',
+      action: handleExportData
     },
     {
       icon: HelpCircle,
@@ -66,14 +104,24 @@ const ProfilePage = ({ user, mode, onToggleMode }) => {
                 {user.name.charAt(0)}
               </span>
             </div>
-            <div>
+            <div className="flex-1">
               <h2 className={`font-bold text-neutral-900 ${mode === 'simplified' ? 'text-2xl' : 'text-xl'}`}>
                 {user.name}
               </h2>
               <p className={`text-neutral-600 ${mode === 'simplified' ? 'text-lg' : 'text-base'}`}>
                 等級：{user.level}
               </p>
+              <p className={`text-neutral-500 ${mode === 'simplified' ? 'text-base' : 'text-sm'} mt-1`}>
+                身份證號：{user.id}
+              </p>
             </div>
+            <button
+              onClick={handleCopyIdCard}
+              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+              title="複製身份證號"
+            >
+              <Copy size={18} className="text-neutral-400" />
+            </button>
           </div>
         </div>
 
@@ -108,12 +156,7 @@ const ProfilePage = ({ user, mode, onToggleMode }) => {
         {/* 退出登录 */}
         <div className="mt-8">
           <button
-            onClick={() => {
-              if (confirm('確定要退出登錄嗎？')) {
-                alert('退出成功！')
-                // 这里可以添加实际的退出逻辑
-              }
-            }}
+            onClick={handleLogout}
             className={`w-full ${mode === 'simplified' ? 'h-16 text-lg' : 'h-14'} bg-error text-white font-bold rounded-xl hover:bg-red-600 transition-colors duration-200`}
           >
             <LogOut size={20} className="inline mr-2" />
