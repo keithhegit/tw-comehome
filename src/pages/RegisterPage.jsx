@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserPlus, MapPin, ArrowLeft, Shield, CheckCircle, User } from 'lucide-react'
 import { registerUser } from '../utils/userService'
+import { APP_LOGO_URL, APP_NAME } from '../constants/constants'
 
 const RegisterPage = ({ mode }) => {
   const navigate = useNavigate()
@@ -100,9 +101,14 @@ const RegisterPage = ({ mode }) => {
           <ArrowLeft size={24} className="text-neutral-600" />
         </button>
 
-        {/* 标题 */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
+        {/* Logo/标题 */}
+        <div className="text-center mb-8">
+          <img 
+            src={APP_LOGO_URL}
+            alt={`${APP_NAME} Logo`}
+            className="w-20 h-20 mx-auto mb-4 rounded-2xl shadow-md object-cover"
+          />
+          <div className="flex items-center justify-center gap-3 mb-2">
             <UserPlus size={28} className="text-primary-500" />
             <h1 className={`font-bold text-neutral-900 ${mode === 'simplified' ? 'text-3xl' : 'text-2xl'}`}>
               註冊帳號

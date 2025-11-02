@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogIn, ArrowLeft, User, Shield } from 'lucide-react'
 import { loginById } from '../utils/userService'
+import { APP_LOGO_URL, APP_NAME, APP_TAGLINE } from '../constants/constants'
 
 const LoginPage = ({ mode }) => {
   const navigate = useNavigate()
@@ -46,11 +47,16 @@ const LoginPage = ({ mode }) => {
       <div className="w-full max-w-sm">
         {/* Logo/标题 */}
         <div className="text-center mb-8">
+          <img 
+            src={APP_LOGO_URL}
+            alt={`${APP_NAME} Logo`}
+            className="w-24 h-24 mx-auto mb-4 rounded-2xl shadow-md object-cover"
+          />
           <h1 className={`font-bold text-neutral-900 mb-2 ${mode === 'simplified' ? 'text-4xl' : 'text-3xl'}`}>
-            有出息
+            {APP_NAME}
           </h1>
           <p className={`text-neutral-600 ${mode === 'simplified' ? 'text-lg' : 'text-base'}`}>
-            從從容容，游刃有余
+            {APP_TAGLINE}
           </p>
         </div>
 
