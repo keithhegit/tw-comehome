@@ -1,3 +1,15 @@
+/assets/*.css
+  Content-Type: text/css; charset=utf-8
+
+/*.css
+  Content-Type: text/css; charset=utf-8
+
+/assets/*.js
+  Content-Type: application/javascript; charset=utf-8
+
+/assets/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+
 /*.js
   Content-Type: application/javascript; charset=utf-8
 
@@ -6,12 +18,6 @@
 
 /*.jsx
   Content-Type: application/javascript; charset=utf-8
-
-/assets/*
-  Content-Type: application/javascript; charset=utf-8
-
-/*.css
-  Content-Type: text/css; charset=utf-8
 
 /*.json
   Content-Type: application/json; charset=utf-8
