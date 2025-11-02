@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Noto Sans TC', ui-sans-serif, system-ui;
+  }
+  
+  body {
+    @apply bg-neutral-50 text-neutral-900;
+  }
+  
+  /* 简化模式样式 */
+  .simplified-mode {
+    @apply text-lg leading-relaxed;
+  }
+  
+  .simplified-mode h1 {
+    @apply text-5xl font-bold;
+  }
+  
+  .simplified-mode h2 {
+    @apply text-3xl font-bold;
+  }
+  
+  .simplified-mode h3 {
+    @apply text-2xl font-semibold;
+  }
+  
+  .simplified-mode .text-base {
+    @apply text-lg;
+  }
+  
+  .simplified-mode .text-sm {
+    @apply text-base;
+  }
+  
+  .simplified-mode .text-xs {
+    @apply text-sm;
+  }
+}
+
+@layer components {
+  /* 按钮组件 */
+  .btn-primary {
+    @apply bg-primary-500 text-white font-bold rounded-xl h-14 px-6 transition-all duration-200 active:scale-95 hover:bg-primary-700 hover:-translate-y-0.5 shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply border-2 border-neutral-200 bg-transparent text-neutral-900 font-semibold rounded-xl h-14 px-6 transition-all duration-200 hover:bg-neutral-50 active:scale-95;
+  }
+  
+  .btn-large {
+    @apply w-full h-16 text-lg font-bold;
+  }
+  
+  /* 卡片组件 */
+  .card {
+    @apply bg-white rounded-2xl shadow-md p-6;
+  }
+  
+  .card-simplified {
+    @apply bg-white rounded-2xl shadow-md p-8 space-y-6;
+  }
+  
+  /* 输入框组件 */
+  .input {
+    @apply w-full h-14 px-4 border-2 border-neutral-200 rounded-xl focus:border-primary-500 focus:outline-none transition-colors duration-200;
+  }
+  
+  /* 标签页导航 */
+  .tab-nav {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 h-18 z-50;
+  }
+  
+  .tab-item {
+    @apply flex-1 flex flex-col items-center justify-center py-2 text-neutral-500 transition-colors duration-200;
+  }
+  
+  .tab-item.active {
+    @apply text-primary-500;
+  }
+  
+  /* 高压模式 */
+  .pressure-mode {
+    @apply fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-8;
+  }
+  
+  .pressure-mode h1 {
+    @apply text-6xl font-bold text-center mb-8 text-neutral-900;
+  }
+  
+  .pressure-mode .qr-container {
+    @apply w-full max-w-md mb-8;
+  }
+  
+  .pressure-mode .user-info {
+    @apply text-2xl font-semibold text-center text-neutral-900 space-y-2;
+  }
+}
+
+@layer utilities {
+  /* 间距工具 */
+  .space-y-simplified > * + * {
+    margin-top: 2rem;
+  }
+  
+  .space-y-simplified-lg > * + * {
+    margin-top: 3rem;
+  }
+  
+  /* 触摸优化 */
+  .touch-target {
+    @apply min-h-12 min-w-12 flex items-center justify-center;
+  }
+  
+  /* 动画工具 */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
