@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserPlus, MapPin, ArrowLeft, Shield, CheckCircle } from 'lucide-react'
+import { UserPlus, MapPin, ArrowLeft, Shield, CheckCircle, User } from 'lucide-react'
 import { registerUser } from '../utils/userService'
 
 const RegisterPage = ({ mode }) => {
