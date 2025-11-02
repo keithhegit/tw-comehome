@@ -84,7 +84,7 @@ function App() {
         </main>
 
         {/* 底部导航 */}
-        <TabNavigation tabs={tabs} currentPath={window.location.pathname} />
+        <TabNavigation tabs={tabs} />
 
         {/* 模式切换组件（仅在特定页面显示） */}
         <ModeToggle mode={mode} onToggle={toggleMode} />
