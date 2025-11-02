@@ -28,7 +28,7 @@ function App() {
 
     // 模拟用户数据
     const mockUser = {
-      name: '張小明',
+      name: '何基基',
       id: '310123456789',
       level: '党组领导',
       invitedCount: 7,

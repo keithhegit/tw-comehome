@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { ArrowLeft, Heart, MessageCircle, X, ThumbsUp } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,36 +8,69 @@ const DatingPage = ({ user, mode }) => {
   const [hearts, setHearts] = useState(3) // 模拟爱心值
   const maxHearts = 5
 
-  // 模拟用户数据
-  const matches = [
-    {
-      id: 1,
-      name: '小雨',
-      age: 24,
-      location: '北京',
-      photo: '👩',
-      bio: '喜歡看電影和旅行，希望找到真誠的朋友',
-      interests: ['電影', '旅行', '美食']
-    },
-    {
-      id: 2,
-      name: '建國',
-      age: 26,
-      location: '上海',
-      photo: '👨',
-      bio: '工程師，喜歡戶外運動和攝影',
-      interests: ['攝影', '運動', '科技']
-    },
-    {
-      id: 3,
-      name: '美麗',
-      age: 23,
-      location: '廣州',
-      photo: '👩',
-      bio: '設計師，愛好藝術和音樂',
-      interests: ['設計', '音樂', '藝術']
+  // 生成100个匹配用户数据
+  const generateMatches = () => {
+    const photos = ['👩', '👨', '👧', '🧑', '👶', '🧒', '👴', '👵']
+    const cities = ['北京', '上海', '廣州', '深圳', '杭州', '成都', '重慶', '武漢', '西安', '南京', '台北', '高雄', '台中', '台南', '新北', '桃園']
+    const allInterests = [
+      '電影', '旅行', '美食', '攝影', '運動', '科技', '設計', '音樂', '藝術', '閱讀',
+      '寫作', '繪畫', '跳舞', '唱歌', '遊戲', '健身', '瑜伽', '登山', '游泳', '跑步',
+      '咖啡', '茶藝', '烘焙', '烹飪', '寵物', '園藝', '收藏', '手工', '編程', '投資'
+    ]
+    const bios = [
+      '喜歡看電影和旅行，希望找到真誠的朋友',
+      '工程師，喜歡戶外運動和攝影',
+      '設計師，愛好藝術和音樂',
+      '教師，熱愛閱讀和教育',
+      '創業者，喜歡挑戰和創新',
+      '醫護人員，關心健康生活',
+      '藝術家，追求美好的事物',
+      '運動員，熱愛運動和競技',
+      '音樂人，享受音樂帶來的快樂',
+      '美食家，喜歡探索各地美食',
+      '攝影師，用鏡頭記錄生活',
+      '作家，喜歡用文字表達情感',
+      '程式設計師，享受創造的樂趣',
+      '心理師，關注心理健康',
+      '建築師，熱愛設計和建造',
+      '律師，追求公平正義',
+      '會計師，細心謹慎',
+      '市場營銷，創意無限',
+      '護理師，溫暖有愛心',
+      '學生，對未來充滿期待'
+    ]
+    
+    const matches = []
+    const firstNames = ['小', '大', '明', '麗', '強', '美', '文', '華', '建', '國', '志', '偉', '芳', '靜', '英', '敏', '秀', '紅', '玉', '霞', '軍', '傑', '輝', '鵬', '濤', '超', '勇', '剛', '磊', '波', '斌', '俊', '飛', '龍', '浩', '宇', '博', '思', '雪', '婷']
+    const lastNames = ['雨', '建', '美', '小', '明', '麗', '強', '文', '華', '國', '志', '偉', '芳', '靜', '英', '敏', '秀', '紅', '玉', '霞']
+    
+    for (let i = 0; i < 100; i++) {
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)]
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
+      const name = i < 50 ? `${firstName}${lastName}` : `${lastName}${firstName}`
+      const age = 20 + Math.floor(Math.random() * 25) // 20-44岁
+      const selectedInterests = []
+      const interestCount = 2 + Math.floor(Math.random() * 4) // 2-5个兴趣
+      const shuffled = [...allInterests].sort(() => 0.5 - Math.random())
+      for (let j = 0; j < interestCount; j++) {
+        selectedInterests.push(shuffled[j])
+      }
+      
+      matches.push({
+        id: i + 1,
+        name,
+        age,
+        location: cities[Math.floor(Math.random() * cities.length)],
+        photo: photos[Math.floor(Math.random() * photos.length)],
+        bio: bios[Math.floor(Math.random() * bios.length)],
+        interests: selectedInterests
+      })
     }
-  ]
+    
+    return matches
+  }
+  
+  const matches = useMemo(() => generateMatches(), [])
 
   const currentMatch = matches[currentIndex]
 
@@ -77,7 +110,7 @@ const DatingPage = ({ user, mode }) => {
           >
             <ArrowLeft size={24} className="text-neutral-600" />
           </button>
-          <h1 className="text-xl font-bold text-neutral-900">每日匹配 (3)</h1>
+          <h1 className="text-xl font-bold text-neutral-900">每日匹配 ({matches.length})</h1>
         </div>
       </header>
 

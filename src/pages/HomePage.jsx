@@ -30,7 +30,7 @@ const HomePage = ({ user, mode }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">張</span>
+                <span className="text-white font-bold text-lg">何</span>
               </div>
               <div>
                 <h1 className="font-bold text-neutral-900">{user?.name || '用戶'}</h1>
